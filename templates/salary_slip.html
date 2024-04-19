@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Slip</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .header h1, .header p {
+            margin: 0;
+        }
+        .header p {
+            text-align: center;
+        }
+        .details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .details-column {
+            flex: 1;
+        }
+        .details-table {
+            width: 100%;
+        }
+        .details-table th,
+        .details-table td {
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+        }
+        .details-label {
+            font-weight: bold;
+        }
+        .details-value {
+            font-style: italic;
+        }
+        .total {
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: right;
+        }
+        .net-pay {
+            margin-top: 30px;
+            text-align: left;
+            font-weight: bold;
+        }
+        .column {
+            width: 50%; 
+            float: left; 
+        }
+        .h2 {
+            margin: 5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Rashtratthana Parishat</h1>
+            <p>93, Keshava Shilpa, K G Nagar, Bengaluru - 560004</p>
+        </div>
+
+        
+        <div class="employee-details">
+    <h2>Employee Details</h2>
+    <div class="columns">
+        <!-- First Column -->
+        <div class="column">
+            <div class="details-row">
+                <div class="details-pair">
+                    <div class="details-label">Employee ID: {{ employee.employee_id }}</div>
+                </div>
+                <div class="details-pair">
+                    <div class="details-label">Employee Name: {{ employee.employee_name }}</div>
+                </div>
+                <div class="details-pair">
+                    <div class="details-label">PF No.: {{ employee.pf_no }}</div>
+                </div>
+                <div class="details-pair">
+                    <div class="details-label">ESI No.: {{ employee.esi_no }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Column -->
+        <div class="column">
+            <div class="details-row">
+                <div class="details-pair">
+                    <div class="details-label">NOP: {{ employee.nop }}</div>
+                </div>
+                <div class="details-pair">
+                    <div class="details-label">Date of Joining: {{ employee.doj }}</div>
+                </div>
+                <div class="details-pair">
+                    <div class="details-label">Designation: {{ employee.designation }}</div>
+                </div>
+                <div class="details-pair">
+                    <div class="details-label">Department: {{ employee.department }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        
+        <!-- Earnings and Deductions -->
+<table class="details-table">
+    <tr>
+        <td class="details-column">
+            <table class="details-table-inner">
+                <caption>Earnings</caption>
+                <tr>
+                    <th class="details-label">Basic + DA:</th>
+                    <td class="details-value">₹{{ employee.basic_da }}</td>
+                </tr>
+                <tr>
+                    <th class="details-label">HRA:</th>
+                    <td class="details-value">₹{{ employee.hra }}</td>
+                </tr>
+                <tr>
+                    <th class="details-label">Other ALW:</th>
+                    <td class="details-value">₹{{ employee.other_alw }}</td>
+                </tr>
+                <tr>
+                    <th class="details-label">CCA:</th>
+                    <td class="details-value">₹1,805.00</td> <!-- Arbitrary value -->
+                </tr>
+            </table>
+        </td>
+        <td class="details-column">
+            <table class="details-table-inner">
+                <caption>Deductions</caption>
+                <tr>
+                    <th class="details-label">PF:</th>
+                    <td class="details-value">₹1,800.00</td> <!-- Arbitrary value -->
+                </tr>
+                <tr>
+                    <th class="details-label">PT:</th>
+                    <td class="details-value">₹200.00</td> <!-- Arbitrary value -->
+                </tr>
+                <tr>
+                    <th class="details-label">Mess:</th>
+                    <td class="details-value">₹600.00</td> <!-- Arbitrary value -->
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+        
+
+
+        <!-- Total Earnings and Deductions -->
+        <div class="total">Total Earnings: ₹{{ employee.basic_da + employee.hra + employee.other_alw + 1805 }}</div>
+        <div class="total">Total Deductions: ₹2600.00</div> <!-- Sum of arbitrary values -->
+
+        <!-- Net Pay -->
+        <div class="net-pay">
+            <div class="details-row">
+                <div class="details-label">Net Pay (₹):</div>
+                <div id="netPay"></div>
+            </div>
+            <div class="details-row">
+                <div class="details-label">IN Words:</div>
+                <div id="netPayWords"></div>
+            </div>
+        </div>
+
+        <script>
+            // Calculate total earnings and deductions
+            var totalEarnings = {{ employee.basic_da + employee.hra + employee.other_alw + 1805 }};
+            var totalDeductions = 1800 + 200 + 600; // Arbitrary values
+
+            // Calculate net pay
+            var netPay = totalEarnings - totalDeductions;
+
+            // Display net pay
+            document.getElementById('netPay').innerText = netPay.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+            document.getElementById('netPayWords').innerText = numberToWords(netPay);
+
+            // Function to convert number to words
+            function numberToWords(number) {
+                // Your code to convert number to words here
+                // Return the words equivalent of the number
+                return "Rupees " + number;
+            }
+        </script>
+    </div>
+</body>
+</html>
